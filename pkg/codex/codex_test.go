@@ -30,7 +30,7 @@ func (e ECode) Message() string {
 	}
 }
 
-func ExampleCodeError() {
+func ExampleError() {
 	fmt.Println(New(ECODE_UNDEFINED).Error())
 	e0 := Errorf(ECODE__REASON1, "user message: %d", 1)
 	fmt.Println(e0.Error())
