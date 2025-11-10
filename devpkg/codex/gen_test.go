@@ -11,8 +11,10 @@ import (
 
 func Example() {
 	cwd := must.NoErrorV(os.Getwd())
+	entry := filepath.Join(cwd, "..", "..", "testdata", "codex")
+
 	ctx := genx.NewContext(&genx.Args{
-		Entrypoint: []string{filepath.Join(cwd, "testdata")},
+		Entrypoint: []string{entry},
 	})
 	must.NoError(ctx.Execute(context.Background(), genx.Get()...))
 
