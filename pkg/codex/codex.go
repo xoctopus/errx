@@ -15,11 +15,11 @@ type Code interface {
 	Message() string
 }
 
-// CodeError is a generic interface defining an error with a typed code.
+// Error is a generic interface defining an error with a typed code.
 // It extends the standard error interface with methods to access the typed code,
 // unwrap the underlying cause, and compare errors by code. The generic parameter
 // C must satisfy the Code interface.
-type CodeError[C Code] interface {
+type Error[C Code] interface {
 	// Code returns typed code value
 	Code() C
 	// Error implements an error
