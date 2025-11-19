@@ -79,12 +79,12 @@ upgrade-dep:
 	fi
 
 update:
-	@go get -u all
-	@go mod tidy
+	@GOWORK=off go get -u all
+	@GOWORK=off go mod tidy
 
 tidy:
 	@echo "==> tidy"
-	@go mod tidy
+	@GOWORK=off go mod tidy
 
 test: dep tidy
 	@echo "==> run unit test"
@@ -103,14 +103,14 @@ ci-cover:
 	@if [ "${GOTEST}" = "xgo" ]; then \
 		go install github.com/xhd2015/xgo/cmd/xgo@latest; \
 	fi
-	@$(GOTEST) test -failfast -parallel 1 -gcflags="all=-N -l" ${PACKAGES} -covermode=count -coverprofile=cover.out
+	@GOWORK=off $(GOTEST) test -failfast -parallel 1 -gcflags="all=-N -l" ${PACKAGES} -covermode=count -coverprofile=cover.out
 
 view-cover: cover
 	@echo "==> run unit test with coverage and view"
-	@$(GOBUILD) tool cover -html cover.out
+	@GOWORK=off $(GOBUILD) tool cover -html cover.out
 
 fmt: dep clean
-	@echo "==> format code"
+	@echo "==> formating code"
 	@goimports-reviser -rm-unused \
 		-imports-order 'std,general,company,project' \
 		-project-name ${MOD} \
@@ -119,7 +119,7 @@ fmt: dep clean
 lint: dep
 	@echo "==> static check"
 	@echo "    >>>static checking"
-	@$(GOBUILD) vet ./...
+	@GOWORK=off $(GOBUILD) vet ./...
 	@echo "    done"
 	@echo "    >>>detecting ineffectual assignments"
 	@ineffassign ./...
@@ -128,7 +128,7 @@ lint: dep
 	@gocyclo -over 10 -avg -ignore '_test|_test.go|vendor|pb' . || true
 	@echo "    done"
 
-pre-commit: dep update lint fmt cover clean
+pre-commit: dep update lint fmt view-cover
 
 clean:
 	@find . -name cover.out | xargs rm -rf
